@@ -10,12 +10,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Comparator;
 
+import static com.google.transit.realtime.GtfsRealtime.TripUpdate.StopTimeUpdate.ScheduleRelationship.SKIPPED;
+
 public class GtfsRealtimeTest {
 
     @Test
     public void testData() throws IOException {
         GTFSFeed gtfsFeed = GTFSFeed.fromFile("files/bart.zip");
-        URL url = new URL("file:files/bart.proto");
+        URL url = new URL("file:files/bart.pbf");
         GtfsRealtime.FeedMessage feed = GtfsRealtime.FeedMessage.parseFrom(url.openStream());
         GtfsRealtime.FeedEntity tripUpdateWithBiggestDelay = feed.getEntityList().stream()
                 .max(Comparator.comparingInt(entity ->
@@ -38,4 +40,14 @@ public class GtfsRealtimeTest {
         Assert.assertNotNull(trip);
     }
 
+    @Test
+    public void testDataContainsNoSkips() throws IOException {
+        URL url = new URL("file:files/bart.pbf");
+        GtfsRealtime.FeedMessage feed = GtfsRealtime.FeedMessage.parseFrom(url.openStream());
+        long c = feed.getEntityList().stream()
+                .flatMap(e -> e.getTripUpdate().getStopTimeUpdateList().stream())
+                .filter(stu -> stu.getScheduleRelationship() == SKIPPED)
+                .count();
+        Assert.assertEquals(0, c);
+    }
 }
