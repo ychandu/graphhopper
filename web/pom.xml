@@ -16,7 +16,7 @@
         <version>0.10-SNAPSHOT</version>
     </parent>
     <properties>
-        <jetty.version>9.4.2.v20170220</jetty.version>
+        <jetty.version>9.4.12.v20180830</jetty.version>
     </properties>
 
     <dependencies>
@@ -46,7 +46,7 @@
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
-            <version>4.1.0</version>
+            <version>4.2.1</version>
         </dependency>
 
         <!-- necessary to use guice ('@Inject') in servlets -->
